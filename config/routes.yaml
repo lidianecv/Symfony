@@ -3,3 +3,11 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+hello:
+        path: /hello
+        controller: App\Controller\HelloController::index
+
+helloname:
+        path: /helloname/{name}
+        controller: App\Controller\HelloController::helloname     

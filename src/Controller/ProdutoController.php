@@ -1,7 +1,9 @@
-<?php 
+<?php
+
 namespace App\Controller;
 
 use App\Entity\Produto;
+use App\Form\ProdutoType;
 use App\Repository\CategoriaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,8 +35,16 @@ class ProdutoController extends AbstractController{
 }
 return new Response ("<h1> .$msg. </h1>");
 }
+
+    #[Route(path:"/produto/adicionar", name:"produto_adicionar")]
+
+    public function adicionar(): Response {
+        $form = $this->createForm (ProdutoType::class);
+        
+        return $this->render('produto/form.html.twig', [
+            'titulo' => 'Adicionar novo produto',
+            'form' => $form->createView(),
+        ]);
     }
-
-
-
+}
 ?>

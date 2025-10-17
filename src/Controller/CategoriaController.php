@@ -3,46 +3,64 @@ namespace App\Controller;
 
 use App\Entity\Categoria;
 use App\Form\CategoriaType;
+use App\Repository\CategoriaRepository;
 use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\DBAL\Types\TextType;
 
 
-class CategoriaController extends AbstractController {
-   
+
+class CategoriaController extends AbstractController
+{
+
     #[Route('/categoria', name: 'categoria_index')]
 
-    public function index(EntityManagerInterface $em):Response {
-        //$em é um obj k vai auxiliar a execuçaao no db
-        $categoria = new Categoria() ;
-        $categoria->setDescricaocategoria("Informática");
-        $msg="";
-         
-        try {
-        $em->persist($categoria);//salvar a persistencia em nível  de memória
-        $em->flush();//executa em definitivo no banco de dados
-        $msg= "Categoria cadastrada com sucesso";
+    public function index(CategoriaRepository $categoriaRepository): Response
+    {
+        //busca no db tdas as categorias cadastradas
+         $data['categorias'] = $categoriaRepository->findAll();
+        $data['titulo']='Gerenciar Categoria';
+       
+        return $this->render('categoria/index.html.twig', $data);
+    }
+
+    #[Route("/categoria/adicionar", name: "categoria_adicionar")]
+
+    public function adicionar(Request $request, EntityManagerInterface $em): Response
+    {
+
+        $categoria = new Categoria();
+        $form = $this->createForm(CategoriaType::class, $categoria);
+        $form->handleRequest($request);
+
+           $msg = "";
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //salvar a n$msg = "";ova cat no db
+
+            $em->persist($categoria);//salvar na memoria
+            $em->flush();// salvar permanentemente no db
+
+            $msg = "Categoria add com sucessso";
+
+
         }
-        catch(\Exception $e) {
-            $msg="Erro ao cadastrar categoria";
-}
-return new Response ("<h1> .$msg. </h1>");
-}
 
- #[Route("/categoria/adicionar", name: "categoria_adicionar")]
+        $data['titulo'] = 'Adicionar nova categoria';
+        $data['form'] = $form;
+        $data['msg']= $msg;
 
- public function adicionar ():Response {
-    $form =$this->createForm(CategoriaType::class);
-    $data['titulo']='Adicionar nova categoria';
-    $data['form']= $form;
-
-    return $this->render('categoria/form.html.twig', [
-    'form' => $form->createView(),
-]);
- }
+        return $this->render('categoria/form.html.twig', [
+            'form' => $form->createView(),
+            'titulo' => 'Nova Categoria',
+               'msg' => $msg,
+           
+ ]);
+    }
 
 }
 ?>

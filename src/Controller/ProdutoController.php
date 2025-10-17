@@ -31,7 +31,7 @@ class ProdutoController extends AbstractController{
         $msg= "Produto cadastrado com sucesso";
         }
         catch(\Exception $e) {
-            $msg="Erro ao cadastrar categoria";
+            $msg="Erro ao cadastrar produto";
 }
 return new Response ("<h1> .$msg. </h1>");
 }

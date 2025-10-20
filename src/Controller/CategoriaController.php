@@ -44,7 +44,6 @@ class CategoriaController extends AbstractController
 
             $em->persist($categoria);//salvar na memoria
             $em->flush();// salvar permanentemente no db
-
             $msg = "Categoria add com sucessso";
 
 

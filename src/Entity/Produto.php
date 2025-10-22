@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProdutoRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProdutoRepository::class)]
 class Produto
@@ -12,6 +13,7 @@ class Produto
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("api_list")]
     private ?int $id = null;
 
      #[Assert\Length(
@@ -22,6 +24,7 @@ class Produto
     )]
 
     #[ORM\Column(length: 50)]
+      #[Groups("api_list")]
     private ?string $nomeproduto = null;
 
     #[ORM\Column]
@@ -30,6 +33,7 @@ class Produto
 
     #[ORM\ManyToOne(inversedBy: 'produtos')]
     #[ORM\JoinColumn(nullable: false)]
+      #[Groups("api_list")]
     private ?Categoria $categoria = null;
 
     public function getId(): ?int
